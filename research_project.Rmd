@@ -1,0 +1,537 @@
+---
+title: "Research project"
+author: "Denys Herasymuk and Yaroslav Morozevych"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Aim
+
+At this experiment we want to determine **what political and economic features** can correlate with **Life Expectancy** in different countries and to determine how deeply can they correlate to make some assumptions. We will do this experiment with several features and several countries, and after that we will make some assumptions.
+
+## Choosing proper features
+
+Dataset was taken from https://databank.worldbank.org/source/world-development-indicators# 
+
+Among 1440 features we have chosen only 42 that could correlate with life expectancy, but after analyzing gained data, we had to get rid of approximately 30 features because of the lack of data. However, we still have some features left that could correlate with chosen parameter:
+
+**GDP (per capita)**, **Expense (% of GDP)**, **Tech Industry Progress**, **Employment Ratio**, **Waged Workers Ratio**, **Health Expenditure** and **Binding Coverage**.
+
+## Choosing countries
+
+For this experiment we have decided to choose the countries with high-income (USA, Japan), middle-income (Ukraine, Tajikistan) and low-income (Mali, Haiti) to understand on what parameters depends life expectancy in countries with different money capital.
+
+## Approach
+
+We will use the linear regression to see if there is a linear relation between the parameters we have chosen and use this knowledge to be able to decide what parameters really affect the life expectancy. Using linear regression we will determine the significance level of every parameter (its p-value), which will tells us either we will reject null hypothesis or no. Also, the R-squared will show us how good our model is. In other words, how good this linear relation is.
+
+## Hypothesis
+
+So, we will have two hypothesis', $H_0$ (there is no correlation between these parameters) and $H_1$ (there is at least one parameter that correlates).
+
+$$
+  H_0 : \beta = \beta_0\   \;\;\;\; H_1: \beta \neq \beta_0
+$$
+
+```{r}
+# function to print data of experiment
+print_model <- function(model, features) {
+  cat("Features:\t", features, "\nR-squared:\t", summary(model)$r.squared,
+    "\nP-values:\t", summary(model)$coefficients[,4])
+}
+```
+
+## Experimenting on High-level countries (USA, Japan)
+
+We will try to find correlation **life expectancy** using the data set bellow. After this, we will decide what features can be chosen to determine what really effects this parameter of high-level countries. *Some of the data is missed, but we do not take the first lines into consideration as we have 50-line data set, where each line corresponds to certain year.*
+
+
+### USA
+
+```{r}
+# read csv file
+usa <- read.csv(file = 'data/data_usa.csv')
+head(usa, 3)
+```
+
+#### Testing features
+
+```{r}
+model <- lm(formula=life_expectancy ~ tech, data=usa)
+print_model(model, "Tech")
+
+model <- lm(formula=life_expectancy ~ employment_ratio + expense, data=usa)
+print_model(model, "Employment Ratio + Expense")
+
+model <- lm(formula=life_expectancy ~ waged_workers, data=usa)
+print_model(model, "Waged Workers Ratio")
+
+model <- lm(formula=life_expectancy ~ health_expenditure, data=usa)
+print_model(model, "Health Expenditure")
+
+model <- lm(formula=life_expectancy ~ gdp, data=usa)
+print_model(model, "GDP per Capita")
+```
+
+### Japan
+
+```{r}
+# read csv file
+japan <- read.csv(file = 'data/data_japan.csv')
+head(japan, 3)
+```
+
+#### Testing features
+
+```{r}
+model <- lm(formula=life_expectancy ~ tech, data=japan)
+print_model(model, "Tech")
+
+model <- lm(formula=life_expectancy ~ employment_ratio + expense, data=japan)
+print_model(model, "Employment Ratio + Expense")
+
+model <- lm(formula=life_expectancy ~ waged_workers, data=japan)
+print_model(model, "Waged Workers Ratio")
+
+model <- lm(formula=life_expectancy ~ health_expenditure, data=japan)
+print_model(model, "Health Expenditure")
+
+model <- lm(formula=life_expectancy ~ gdp, data=japan)
+print_model(model, "GDP per Capita")
+```
+
+## Experimenting on Mid-level countries (Ukraine, Tajikistan)
+
+We will try to find correlation **life expectancy** using the data set bellow. After this, we will decide what features can be chosen to determine what really effects this parameter of mid-level countries. *Some of the data is missed, but we do not take the first lines into consideration as we have 50-line data set, where each line corresponds to certain year.*
+
+### Ukraine
+
+```{r}
+# read csv file
+ukraine <- read.csv(file = 'data/data_ukraine.csv')
+head(ukraine, 3)
+```
+
+#### Testing features
+
+```{r}
+model <- lm(formula=life_expectancy ~ tech, data=ukraine)
+print_model(model, "Tech")
+
+model <- lm(formula=life_expectancy ~ binding_coverage, data=ukraine)
+print_model(model, "Binding Coverage")
+
+model <- lm(formula=life_expectancy ~ employment_ratio + expense, data=ukraine)
+print_model(model, "Employment Ratio + Expense")
+
+model <- lm(formula=life_expectancy ~ waged_workers, data=ukraine)
+print_model(model, "Waged Workers Ratio")
+
+model <- lm(formula=life_expectancy ~ health_expenditure, data=ukraine)
+print_model(model, "Health Expenditure")
+
+model <- lm(formula=life_expectancy ~ gdp, data=ukraine)
+print_model(model, "GDP per Capita")
+```
+
+### Tajikistan
+
+```{r}
+# read csv file
+tajikistan <- read.csv(file = 'data/data_tajikistan.csv')
+head(tajikistan, 3)
+```
+
+#### Testing features
+
+```{r}
+model <- lm(formula=life_expectancy ~ tech, data=tajikistan)
+print_model(model, "Tech")
+
+model <- lm(formula=life_expectancy ~ binding_coverage, data=tajikistan)
+print_model(model, "Binding Coverage")
+
+model <- lm(formula=life_expectancy ~ employment_ratio + expense, data=tajikistan)
+print_model(model, "Employment Ratio + Expense")
+
+model <- lm(formula=life_expectancy ~ waged_workers, data=tajikistan)
+print_model(model, "Waged Workers Ratio")
+
+model <- lm(formula=life_expectancy ~ health_expenditure, data=tajikistan)
+print_model(model, "Health Expenditure")
+
+model <- lm(formula=life_expectancy ~ gdp, data=tajikistan)
+print_model(model, "GDP per Capita")
+```
+
+## Experimenting on Low-level countries (Mali, Haiti)
+
+We will try to find correlation **life expectancy** using the data set bellow. After this, we will decide what features can be chosen to determine what really effects this parameter of low-level countries. *Some of the data is missed, but we do not take the first lines into consideration as we have 50-line data set, where each line corresponds to certain year.*
+
+### Mali
+
+```{r}
+# read csv file
+mali <- read.csv(file = 'data/data_mali.csv')
+head(mali, 3)
+```
+
+#### Testing features
+
+```{r}
+model <- lm(formula=life_expectancy ~ binding_coverage, data=mali)
+print_model(model, "Binding Coverage")
+
+model <- lm(formula=life_expectancy ~ employment_ratio + expense, data=mali)
+print_model(model, "Employment Ratio + Expense")
+
+model <- lm(formula=life_expectancy ~ waged_workers, data=mali)
+print_model(model, "Waged Workers Ratio")
+
+model <- lm(formula=life_expectancy ~ health_expenditure, data=mali)
+print_model(model, "Health Expenditure")
+
+model <- lm(formula=life_expectancy ~ gdp, data=mali)
+print_model(model, "GDP per Capita")
+```
+
+### Haiti
+
+```{r}
+# read csv file
+haiti <- read.csv(file = 'data/data_haiti.csv')
+head(haiti, 3)
+```
+
+#### Testing features
+
+```{r}
+model <- lm(formula=life_expectancy ~ tech, data=haiti)
+print_model(model, "Tech")
+
+model <- lm(formula=life_expectancy ~ binding_coverage, data=haiti)
+print_model(model, "Binding Coverage")
+
+model <- lm(formula=life_expectancy ~ employment_ratio, data=haiti)
+print_model(model, "Employment Ratio")
+
+model <- lm(formula=life_expectancy ~ waged_workers, data=haiti)
+print_model(model, "Waged Workers Ratio")
+
+model <- lm(formula=life_expectancy ~ health_expenditure, data=haiti)
+print_model(model, "Health Expenditure")
+
+model <- lm(formula=life_expectancy ~ gdp, data=haiti)
+print_model(model, "GDP per Capita")
+```
+
+# Visualization part
+
+In the above part, we have understood that **Life expectancy** is the most linearly dependent on such features as **Health expenditure**, **Waged workers**,  **GDP per capita**, **Employment ratio** and **Expense**. It was found out based on the results of the majority of countries, where they are dependent. 
+
+Now **the main aim of visualization part** is to really see, compare the results with graphs, know interesting facts about our and other countries and make sure of the truth of the findings.
+
+
+
+```{r}
+require(ggplot2)
+library(ggplot2)
+
+library(plotly)
+
+library(dgof) 
+library('plot.matrix')
+
+```
+
+
+## Matrix for tendency of Mean, Mode, Meadian of life expectancy of the countries
+
+#### Data have been collected through 30-50 years
+
+
+According to this matrix we can see general tendency of life expectancy of the countries and place them by value of this indicator(starting from longest):
+Japan, USA, Ukraine, Tajikistan, Haiti, Mali
+
+```{r}
+
+
+get_mode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
+filenames <- c('data/data_usa.csv', 'data/data_japan.csv',
+               'data/data_ukraine.csv', 'data/data_tajikistan.csv',
+               'data/data_mali.csv', 'data/data_haiti.csv')
+
+country_names <- c("USA", "Japan", "Ukraine", "Tajikistan", "Mali", "Haiti")
+features <- c("_____Mean_____", "_____Mode_____", "_____Median_____")
+
+countries_matrix <- matrix(0, nrow=length(country_names), ncol=length(features),
+                          dimnames=list(country_names, features))
+
+# create general data frame for easier visualization
+for (i in 1:length(filenames)) {
+  df <- read.csv(file = filenames[i])
+  df["country"] <- country_names[i]
+  
+  correlated_df <- df[, c("life_expectancy", "health_expenditure",
+                          "waged_workers",  "gdp",
+                          "employment_ratio", "expense",
+                          "country")]
+  
+  if (i == 1) {
+    general_df <- correlated_df
+  }
+  else {
+    general_df <- rbind(general_df, 
+                        correlated_df) 
+  }
+  
+  # clear a column from NaN values
+  filtered_list <- na.omit(correlated_df$life_expectancy)
+  
+  countries_matrix[i, 1] = mean(filtered_list)
+  countries_matrix[i, 2] = get_mode(sapply(filtered_list, FUN=round))
+  countries_matrix[i, 3] = median(filtered_list)
+}
+
+write.csv(general_df, "data/general_df.csv", row.names=FALSE)
+
+print(countries_matrix)
+
+```
+
+## Boxplots for comparison of different features
+
+#### Plotly library also gives you an opportunity to zoom in and
+#### hover over the cursor on the boxplot and see the real numbers  (>‿◠)✌
+
+
+On the below plots we can see that **in the majority of the countries** Life expectancy **really corresponds** to our features. Our boxplots show Min, Q1, Median, Q3 and Max characteristics.
+In some cases, for ex. USA has the biggest Health expenditure, but it does not have the longest life expectacy (it was also found out in predictions of our linear regression for this feature and USA)
+
+
+```{r}
+p <- ggplot(general_df, aes(country, life_expectancy)) +
+  ggtitle("Life expectancy of different countries") +
+  labs(y="Years") +
+  geom_boxplot(aes(color = country, fill = country), alpha=.5)
+
+ggplotly(p)
+
+```
+`
+```{r}
+p <- ggplot(general_df, aes(country, health_expenditure)) +
+  ggtitle("Health expenditure of different countries") +
+  labs(y = "Health expenditure") +
+  geom_boxplot(aes(color = country, fill = country), alpha=.5)
+
+ggplotly(p)
+
+```
+
+
+```{r}
+p <- ggplot(general_df, aes(country, waged_workers)) +
+  ggtitle("Waged workers of different countries") +
+  labs(y = "% of population") +
+  geom_boxplot(aes(color = country, fill = country), alpha=.5)
+
+ggplotly(p)
+
+```
+
+
+```{r}
+p <- ggplot(general_df, aes(country, gdp)) +
+  ggtitle("GDP of different countries") +
+  labs(y = "GDP per capita") +
+  geom_boxplot(aes(color = country, fill = country), alpha=.5)
+
+ggplotly(p)
+
+```
+
+
+```{r}
+p <- ggplot(general_df, aes(country, expense)) +
+  ggtitle("Employment ratio of different countries") +
+  labs(y="% of population") +
+  geom_boxplot(aes(color = country, fill = country), alpha=.5)
+
+ggplotly(p)
+
+```
+```{r}
+p <- ggplot(general_df, aes(country, expense)) +
+  ggtitle("Expense of different countries") +
+  labs(y = "Expense") +
+  geom_boxplot(aes(color = country, fill = country), alpha=.5)
+
+ggplotly(p)
+
+```
+
+
+## Plots for comparison of different densities
+
+#### For clear understanding, if graph is closer to the right part,
+#### so the feature for such country is bigger :=)
+
+
+Also like previously, on the below plots we can see that **in the majority of the countries** Life expectancy **really corresponds** to our features. Now we explore the density of different features of the countries.
+
+After its investigating we understand that countries with high level of economic development have passed a long way of improvement and make it with small steps, but periodically. On the other hand, countries with less level of development can stay with the same indicators of some features through the years.
+
+
+```{r}
+p <- ggplot(general_df, aes(x = life_expectancy, fill = country))+
+  geom_density(adjust=1.5, alpha=.4) + 
+  ggtitle("Life expectancy of different countries") +
+  labs(y="Density", x = "Life expectancy")
+
+ggplotly(p)
+
+```
+
+```{r}
+p <- ggplot(general_df, aes(x = health_expenditure, fill = country))+
+  geom_density(adjust=1.5, alpha=.4) + 
+  ggtitle("Health expenditure of different countries") +
+  labs(y="Density", x = "Health expenditure")
+
+ggplotly(p)
+
+```
+
+
+```{r}
+p <- ggplot(general_df, aes(x = waged_workers, fill = country))+
+  geom_density(adjust=1.5, alpha=.4) + 
+  ggtitle("Waged workers of different countries") +
+  labs(y="Density", x = "Waged workers")
+
+ggplotly(p)
+
+```
+
+
+#### You can zoom in if you want to look closer at some plots
+
+USA and Japan have the biggest values of this parameter.
+
+```{r}
+p <- ggplot(general_df, aes(x = gdp, fill = country))+
+  geom_density(adjust=1.5, alpha=.4) + 
+  ggtitle("GDP of different countries") +
+  labs(y="Density", x = "GDP per capita")
+
+ggplotly(p)
+
+```
+
+
+#### You can zoom in in case you want to look closer at some plots
+
+
+USA and Japan have the biggest values of this parameter.
+
+
+```{r}
+p <- ggplot(general_df, aes(x = employment_ratio, fill = country))+
+  geom_density(adjust=1.5, alpha=.4) + 
+  ggtitle("Employment ratio of different countries") +
+  labs(y="Density", x = "Employment ratio") +
+  scale_x_continuous(limits=c(-5, 65))
+
+ggplotly(p)
+
+```
+
+
+Here we actually see that partly due to large amount of expense Ukraine has less life expectancy that USA or Japan :=)
+
+```{r}
+p <- ggplot(general_df, aes(x = expense, fill = country))+
+  geom_density(adjust=1.5, alpha=.4) + 
+  ggtitle("Expense of different countries") +
+  labs(y="Density", x = "Expense")
+
+ggplotly(p)
+
+```
+
+
+
+
+
+## Exploring if data of Life expectancy of Ukraine follow one of the standard distributions
+
+
+After exploring the results of Kolmogorov-Smirnov test we can see that our data follow in the majority (we made experiments for it) **normal distribution** with mean = mean(country_df\$life_expectancy) and sd = sd(country_df\$life_expectancy). However, uniform distribution with min = min(country_df\$life_expectancy) and max = max(country_df\$life_expectancy) also is pretty close.
+
+It was proved with below visualizations.
+
+
+```{r}
+library(tolerance)
+country_df <- read.csv(file = 'data/data_ukraine.csv')
+
+filtered_list <- na.omit(country_df$life_expectancy)
+
+len_list <- length(filtered_list)
+
+compare_norm <- rnorm(len_list, mean=mean(filtered_list), 
+                      sd=sd(filtered_list))
+compare_exp <- r2exp(len_list, shift=min(filtered_list))
+compare_unif <- runif(len_list, min = min(filtered_list), max = max(filtered_list))
+
+ks.test(filtered_list, compare_norm)
+ks.test(filtered_list, compare_exp)
+ks.test(filtered_list, compare_unif)
+
+```
+```{r}
+library(lattice)
+library(latticeExtra)
+
+vals <- data.frame(feature=filtered_list,
+                   norm_distr=compare_norm)
+
+ecdfplot(~ feature + norm_distr, data=vals, auto.key=list(space='right'))
+
+```
+```{r}
+vals <- data.frame(feature=filtered_list,
+                   exp_distr=compare_exp)
+
+ecdfplot(~ feature + exp_distr, data=vals, auto.key=list(space='right'))
+
+```
+```{r}
+vals <- data.frame(feature=filtered_list,
+                   unif_distr=compare_unif)
+
+ecdfplot(~ feature + unif_distr, data=vals, auto.key=list(space='right'))
+
+```
+
+# Conclusion
+
+So, what we can see is that for every country the importance of some features may differ, take for example **Tech**, this feature is very significant in "Tech-countries" such as Japan and, as we can see, there is some linear relation between Life Expectancy and Tech industry there, but not for other countries. The same we can say about **Binding Coverage** as in High-Income Countries this parameter is always almost the same, which doesn't show any linear relation, but this does not mean that it is insignificant (at least not for countries, but for our model).
+
+We have covered what parameters do not give us any possibility to estimate Life Expectancy, let's talt about the parameters, that have shown us a good linear relation. These are:
+
+1. **Waged Workers Ratio** (0.77 goodness of fit on average)
+2. **GDP** (0.75 goodness of fit on average)
+3. **Health Expenditure** (0.72 goodness of fit on average)
+4. **Employment Ratio + Expense** (0.6 goodness of fit on average)
+
+Of course, these estimations are not very accurate because of the lack of data, but at least we can see that there is some relation between these parameters and life expectancy and it's clear as everything reduces to if country can provide its residents with work, medicine and good finance capital (which depends on job), then those people can cover all their need to live long and healthy life.
