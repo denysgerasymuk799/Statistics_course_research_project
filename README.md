@@ -36,3 +36,4 @@ use this knowledge to be able to decide what parameters really affect the life e
  
  
 For more details look at [this html page](https://github.com/denysgerasymuk799/Statistics_course_research_project/blob/master/research_project.nb.html) 
+with visualisations and conclusions.
